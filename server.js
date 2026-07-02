@@ -7,7 +7,13 @@ const app = express();
 app.use(cors({origin:true, credentials:true}));
 app.use(express.json({limit:'10mb'}));
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/qzone')
+if (!process.env.MONGO_URI) {
+  throw new Error("MONGO_URI is not defined");
+}
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("Qzone DB Connected"))
+  .catch(err => console.error(err));
   .then(()=> console.log('Qzone DB connected'))
   .catch(e=> console.error(e));
 
